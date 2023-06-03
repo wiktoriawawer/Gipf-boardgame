@@ -20,7 +20,7 @@ public:
 	Pozycja(int rozmiar);
 	void uzupelnij_tabele();
 	void wypisz();
-	int jaki_kierunek(string pozycje);
+	int jaki_kierunek(string pozycje);//nie 
 	int* znajdz_miejsce(int x, int y);
 	int znjadz_kierunek(int litera1=0, int cyfra1=0, int litera2=0, int cyfra2=0);
 

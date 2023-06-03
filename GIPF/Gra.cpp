@@ -18,7 +18,7 @@ void Gra::LOAD_GAME_BOARD() {
 	}
 	this->B = new Gracz();
 	this->W = new Gracz();
-	this->piony = NULL;
+	//this->piony = NULL;
 	cin >> this->rozmiarplanszy;
 	cin >> this->liczba_pionow;
 	this->x_plansza = 4 * (rozmiarplanszy - 1) + 1;
@@ -98,11 +98,203 @@ void Gra::PRINT_GAME_STATE() {
 void Gra::GEN_ALL_POS_MOV() {
 
 }
-
-int Gra::GEN_ALL_POS_MOV_NUM() {
+int Gra::hash_function(char** kopia_planszy) {
 	return 0;
 }
 
+int Gra::GEN_ALL_POS_MOV_NUM() {
+
+	int ilosc_rogow = 6;
+	int ilosc_bok = 6 * (rozmiarplanszy - 2);
+	for (int i = 0; i < ilosc_bok; i++) {
+
+	}
+	return 0;
+}
+
+void Gra::dodaj_piony() {
+	int ilosc_pionow = 0;
+
+	//sprawdzzanie poziomo 
+	int poprzednia_ilosc = 0;
+	char poprzedni_kolor = 'X';
+	Pion* pion = new Pion();
+	for (int j = 0; j < y_plansza; j++) {
+		poprzednia_ilosc = 0;
+		for (int i = 0; i < x_plansza; i++) {
+
+			if (plansza[i][j] == 'X')
+				continue;
+			if (plansza[i][j] != NULL) {
+				if (plansza[i][j] == 'W') {
+					pion->ilosc_w++;
+				}
+				else {
+					pion->ilosc_b++;
+				}
+				if (poprzedni_kolor == plansza[i][j]) {
+					poprzednia_ilosc++;
+				}
+				else {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[i][j];
+				}
+			}
+			else {
+				if (pion->ilosc_b >= liczba_pionow || pion->ilosc_w >= liczba_pionow) {
+					//this->piony->lista_pionow.push_back(pion);
+					//this->piony->ilosc_pionow++;
+				}
+				Pion* pion = new Pion();
+				poprzednia_ilosc = 0;
+				poprzedni_kolor = 'X';
+			}
+
+			if (poprzednia_ilosc == liczba_pionow) {
+				
+				ilosc_pionow++;
+			}
+
+		}
+	}
+	//sprawdzanie na ukos
+
+	//sprawdzanie \
+	//ustawienie watosci pocztekowych 
+	int x = 0;
+	int y = rozmiarplanszy - 1;
+	int x_p = x;
+	int y_p = y;
+	poprzednia_ilosc = 0;
+	poprzedni_kolor = 'X';
+	//cout << endl;
+	while (true) {
+		x = x_p;
+		y = y_p;
+		//zaczynamy od elemnetu najbardziej wysunietego /
+		//iterujemy do gory w prawo
+		//po dojsciu do wiersza zerowego 
+		//cofamy sie do do³u itd 
+		poprzednia_ilosc = 0;
+		while (true) {
+			//cout << x << "," << y << endl;
+			if (plansza[x][y] != NULL) {
+				if (poprzednia_ilosc == 0) {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[x][y];
+				}
+				else {
+
+					if (poprzedni_kolor == plansza[x][y]) {
+						poprzednia_ilosc++;
+					}
+					else {
+						poprzednia_ilosc = 1;
+						poprzedni_kolor = plansza[x][y];
+					}
+				}
+			}
+			else {
+				poprzednia_ilosc = 0;
+			}
+			if (poprzednia_ilosc == this->liczba_pionow) {
+				ilosc_pionow++;
+			}
+			if (y + 1 < y_plansza && x + 1 < x_plansza) {
+				y++;
+				x++;
+			}
+			else {
+				break;
+			}
+
+		}
+		if (y_p == 0 && x_p == 3 * rozmiarplanszy - 3) {
+			break;
+		}
+		else {
+			if (y_p > 0) {
+
+				y_p--;
+				x_p++;
+			}
+			else {
+				x_p += 2;
+			}
+
+		}
+	}
+
+	//sprawdzeni \
+
+	//sprawdzanie /
+	//ustawienie watosci pocztekowych 
+	x = 0;
+	y = rozmiarplanszy - 1;
+	x_p = x;
+	y_p = y;
+	poprzednia_ilosc = 0;
+	poprzedni_kolor = 'X';
+	while (true) {
+
+		x = x_p;
+		y = y_p;
+		//zaczynamy od elemnetu najbardziej wysunietego /
+		//iterujemy do gory w prawo
+
+		//po dojsciu do wiersza zerowego 
+		//cofamy sie do do³u itd 
+		poprzednia_ilosc = 0;
+		while (true) {
+			if (plansza[x][y] != NULL) {
+				if (poprzednia_ilosc == 0) {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[x][y];
+				}
+				else {
+					if (poprzedni_kolor == plansza[x][y]) {
+						poprzednia_ilosc++;
+					}
+					else {
+						poprzednia_ilosc = 1;
+						poprzedni_kolor = plansza[x][y];
+					}
+				}
+			}
+			else {
+				poprzednia_ilosc = 0;
+			}
+			if (poprzednia_ilosc == this->liczba_pionow) {
+				/////////////////////
+				ilosc_pionow++;
+			}
+
+			if (y - 1 >= 0 && x + 1 < x_plansza) {
+				y--;
+				x++;
+			}
+			else {
+				break;
+			}
+
+		}
+
+		if (y_p == y_plansza - 1 && x_p == 3 * rozmiarplanszy - 3) {
+			break;
+		}
+		else {
+			if (y_p + 1 < y_plansza) {
+				y_p++;
+				x_p++;
+			}
+			else {
+				x_p += 2;
+			}
+
+		}
+	}
+
+}
 int Gra::znjadz_pion()
 {
 	int ilosc_pionow = 0;
@@ -133,6 +325,7 @@ int Gra::znjadz_pion()
 
 			if (poprzednia_ilosc == liczba_pionow) {
 				////
+				this->piony_poziome++;
 				ilosc_pionow++;
 			}
 
@@ -180,6 +373,7 @@ int Gra::znjadz_pion()
 			}
 			if (poprzednia_ilosc == this->liczba_pionow) {
 				ilosc_pionow++;
+				this->piony_goralewo++;
 			}
 			if (y + 1 < y_plansza && x + 1 < x_plansza) {
 				y++;
@@ -248,6 +442,7 @@ int Gra::znjadz_pion()
 			if (poprzednia_ilosc == this->liczba_pionow) {
 				/////////////////////
 				ilosc_pionow++;
+				this->piony_goraprawo++;
 			}
 
 			if (y - 1 >= 0 && x + 1 < x_plansza) {
@@ -290,6 +485,11 @@ void Gra::SOLVE_GAME_STATE() {
 void Gra::WINING_SEQUENCE_EXIST(int N) {
 	
 }
+void Gra::wyzeruj_piony() {
+	this->piony_goralewo = 0;
+	this->piony_goraprawo = 0;
+	this->piony_poziome = 0;
+}
 void Gra::obsluga_komend()
 {
 	
@@ -313,7 +513,10 @@ void Gra::obsluga_komend()
 		else if (komenda == "DO_MOVE") { //in prog  
 			string pozycje;
 			cin >> pozycje;
+			this->wyzeruj_piony();
+
 			Pozycja poz(this->rozmiarplanszy);
+			//this->pozycja = &poz;
 			if (poz.sprawdz_pozycje(pozycje)) {
 				poz.jaki_kierunek(pozycje);
 				this->zrob_ruch(poz.x, poz.y, poz.kierunek);
@@ -862,13 +1065,13 @@ void Gra::zbierz_pion(int x, int y, int kierunek) {
 			}
 			else break;
 
-			if (i + 1 < x_plansza) {
-				i++;
+			if (i + 2 < x_plansza) {
+				i+=2;
 			}
 			else break;
 		}
 		//idziemy w lewo
-		i = x-1;
+		i = x-2;
 		j = y;
 		while (true) {
 			if (plansza[i][j] == 'W') {
@@ -881,8 +1084,8 @@ void Gra::zbierz_pion(int x, int y, int kierunek) {
 			}
 			else break;
 			
-			if (i - 1>=0) {
-				i--;
+			if (i - 2>=0) {
+				i-=2;
 			}
 			else break;
 		}
@@ -1133,6 +1336,156 @@ void Gra::zbierz_pion() {
 	}
 	cout << "nie udalosie";
 }
+
+void Gra::zbierz_piony_poziome() {
+	int ilosc_pionow = 0;
+	//sprawdzzanie poziomo 
+	int poprzednia_ilosc = 0;
+	char poprzedni_kolor = 'X';
+	for (int j = 0; j < y_plansza; j++) {
+		poprzednia_ilosc = 0;
+		for (int i = 0; i < x_plansza; i++) {
+
+			if (plansza[i][j] == 'X')
+				continue;
+			if (plansza[i][j] != NULL) {
+
+				if (poprzedni_kolor == plansza[i][j]) {
+					poprzednia_ilosc++;
+				}
+				else {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[i][j];
+				}
+			}
+			else {
+				poprzednia_ilosc = 0;
+				poprzedni_kolor = 'X';
+			}
+			if (poprzednia_ilosc == liczba_pionow) {
+				this->zbierz_pion(i, j, PRAWO);
+			}
+		}
+	}
+
+}
+void Gra::zbierz_piony_goralewo() {
+	//sprawdzanie \
+	//ustawienie watosci pocztekowych 
+	int x = 0;
+	int y = rozmiarplanszy - 1;
+	int x_p = x;
+	int y_p = y;
+	int poprzednia_ilosc = 0;
+	int poprzedni_kolor = 'X';
+	while (true) {
+		x = x_p;
+		y = y_p;
+		poprzednia_ilosc = 0;
+		while (true) {
+			if (plansza[x][y] != NULL) {
+				if (poprzednia_ilosc == 0) {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[x][y];
+				}
+				else {
+
+					if (poprzedni_kolor == plansza[x][y]) {
+						poprzednia_ilosc++;
+					}
+					else {
+						poprzednia_ilosc = 1;
+						poprzedni_kolor = plansza[x][y];
+					}
+				}
+			}
+			else {
+				poprzednia_ilosc = 0;
+			}
+			if (poprzednia_ilosc == this->liczba_pionow) {
+				this->zbierz_pion(x, y, GORALEWO);
+				
+			}
+			if (y + 1 < y_plansza && x + 1 < x_plansza) {
+				y++;
+				x++;
+			}
+			else break;
+
+		}
+		if (y_p == 0 && x_p == 3 * rozmiarplanszy - 3) break;
+		else {
+			if (y_p > 0) {
+				y_p--;
+				x_p++;
+			}
+			else {
+				x_p += 2;
+			}
+		}
+	}
+}
+void Gra::zbierz_piony_goraprawo() {
+	//sprawdzanie /
+	//ustawienie watosci pocztekowych 
+	int x = 0;
+	int y = rozmiarplanszy - 1;
+	int x_p = x;
+	int y_p = y;
+	int poprzednia_ilosc = 0;
+	int poprzedni_kolor = 'X';
+	while (true) {
+		x = x_p;
+		y = y_p;
+		//zaczynamy od elemnetu najbardziej wysunietego /
+		//iterujemy do gory w prawo
+		//po dojsciu do wiersza zerowego 
+		//cofamy sie do do³u itd 
+		poprzednia_ilosc = 0;
+		while (true) {
+			if (plansza[x][y] != NULL) {
+				if (poprzednia_ilosc == 0) {
+					poprzednia_ilosc = 1;
+					poprzedni_kolor = plansza[x][y];
+				}
+				else {
+					if (poprzedni_kolor == plansza[x][y]) {
+						poprzednia_ilosc++;
+					}
+					else {
+						poprzednia_ilosc = 1;
+						poprzedni_kolor = plansza[x][y];
+					}
+				}
+			}
+			else {
+				poprzednia_ilosc = 0;
+			}
+			if (poprzednia_ilosc == this->liczba_pionow) {
+				this->zbierz_pion(x, y, GORAPRAWO);
+			}
+			if (y - 1 >= 0 && x + 1 < x_plansza) {
+				y--;
+				x++;
+			}
+			else {
+				break;
+			}
+		}
+		if (y_p == y_plansza - 1 && x_p == 3 * rozmiarplanszy - 3) {
+			break;
+		}
+		else {
+			if (y_p + 1 < y_plansza) {
+				y_p++;
+				x_p++;
+			}
+			else {
+				x_p += 2;
+			}
+		}
+	}
+}
 void Gra::zrob_ruch(int x, int y, int kierunek)
 {
 	if (plansza[x][y] == NULL) {
@@ -1153,12 +1506,168 @@ void Gra::zrob_ruch(int x, int y, int kierunek)
 				cout << "MOVE_COMMITTED" << endl;
 			}
 			else {
-				cout << "wiecej nix 2 piony";
+				if (this->piony_goralewo == 0 && this->piony_goraprawo == 0) {
+					//wszytskie piony sa poziome
+					this->zbierz_piony_poziome();
+					cout << "MOVE_COMMITTED" << endl;
+
+				}
+				else if (this->piony_poziome == 0 && this->piony_goraprawo == 0) {
+					//wszytskie piony sa goralewo
+					this->zbierz_piony_goralewo();
+					cout << "MOVE_COMMITTED" << endl;
+				}
+				else if (this->piony_goralewo == 0 && this->piony_poziome == 0) {
+					//wszytskie piony sa goraprawo 
+					this->zbierz_piony_goraprawo();
+					cout << "MOVE_COMMITTED" << endl;
+				}
+				else {
+
+					string dane,pozycja1,pozycja2;
+					cin >> dane;
+					cin >> pozycja1;
+					cin >> pozycja2;
+					if (this->zbierz_pion(dane, pozycja1, pozycja2)) {
+						cout << "MOVE_COMMITTED" << endl;
+					}
+					//cout << "wiecej nix 2 piony";
+				}
+				
 			}
 		}
 		else {
 			cout <<"BAD_MOVE_ROW_IS_FULL"<<endl;
 		}
 	}
+}
+
+int Gra::jaki_kierunek(int x1, int y1, int x2, int y2) {
+	//this->wypisz();
+	int kierunek = -1;
+	//szykanie pozycji poczatkowej 
+	if (y1 == y2) {
+		if (x1 >x2) {
+			kierunek = LEWO;
+		}
+		else if (x2 > x1 ) {
+			kierunek = PRAWO;
+		}
+	}
+	else if (y1 > y2 ) {
+		if (x1 > x2 ) {
+			kierunek = GORALEWO;
+		}
+		else if (x2 > x1 ) {
+			kierunek = GORAPRAWO;
+		}
+	}
+	else if (y2 > y1 ) {
+		if (x1 > x2 ) {
+			kierunek = DOLLEWO;
+		}
+		else if (x2 > x1 ) {
+			kierunek = DOLPRAWO;
+		}
+	}
+
+	return kierunek;
+}
+
+int Gra::jaka_odleglosc(int x1, int y1, int x2, int y2) {
+	//this->wypisz();
+	int odleglosc = 0;
+	//szykanie pozycji poczatkowej 
+	if (y1 == y2) {
+		if (x1 > x2) {
+			odleglosc=x1-x2;
+		}
+		else if (x2 > x1) {
+			odleglosc = x2 - x1;
+		}
+	}
+	else if (y1 > y2) {
+		odleglosc += y1 - y2;
+		if (x1 > x2) {
+			odleglosc += x1 - x2;
+		}
+		else if (x2 > x1) {
+			odleglosc += x2 - x1;
+		}
+	}
+	else if (y2 > y1) {
+		odleglosc += y2 - y1;
+		if (x1 > x2) {
+			odleglosc += x1 - x2;
+		}
+		else if (x2 > x1) {
+			odleglosc += x2 - x1;
+		}
+	}
+
+	return odleglosc;
+
+}
+
+
+bool Gra::zbierz_pion(string color, string poz1, string poz2) {
+
+	char kolor;
+	Pozycja poz(this->rozmiarplanszy);
+	
+	//this->wypisz();
+	char litera1_ = (int)(poz1[0] - 'a' + 1);
+	int cyfra1_ = (int)(poz1[1] - '1' + 1);
+	int* pozycja1 = poz.znajdz_miejsce(litera1_, cyfra1_);
+	if (pozycja1[0] == -1) {
+		
+	}
+	int litera2_ = (int)(poz2[0] - 'a' + 1);
+	int cyfra2_ = (int)(poz2[1] - '1' + 1);
+	int* pozycja2 = poz.znajdz_miejsce(litera2_, cyfra2_);
+	if (pozycja2[0] == -1) {
+
+	}
+	if (color[0] == 'w') {
+		kolor = 'W';
+	}
+	else kolor = 'B';
+	pozycja1[0] -= 2;
+	pozycja2[0] -= 2;
+	pozycja1[1] -= 1;
+	pozycja2[1] -= 1;
+	if (plansza[pozycja1[0]][pozycja1[1]] != kolor) {
+		if (plansza[pozycja2[0]][pozycja2[1]] != kolor) {
+			cout<< "WRONG_COLOR_OF_CHOSEN_ROW"<<endl;
+			return false;
+		}
+	}
+	int odleglosc=jaka_odleglosc(pozycja1[0], pozycja1[1], pozycja2[0], pozycja2[1]);
+	if (odleglosc != 2*(rozmiarplanszy-1)) {
+		cout << "WRONG_INDEX_OF_CHOSEN_ROW" << endl;
+		return false;
+	}
+
+
+	int kierunek = jaki_kierunek(pozycja1[0], pozycja1[1], pozycja2[0], pozycja2[1]);
+
+	if (kierunek == LEWO || kierunek == PRAWO) {
+		if (this->piony_poziome > 0) {
+			this->zbierz_pion(pozycja1[0], pozycja1[1], kierunek);
+		}
+	}
+	else if (kierunek == GORALEWO || kierunek == DOLPRAWO) {
+		if (this->piony_goralewo > 0) {
+			this->zbierz_pion(pozycja1[0], pozycja1[1], kierunek);
+		}
+	}
+	else if (kierunek == GORAPRAWO || kierunek == DOLLEWO) {
+		if (this->piony_goraprawo > 0) {
+			this->zbierz_pion(pozycja1[0], pozycja1[1], kierunek);
+		}
+	}
+
+	
+	return true;
 
 }
